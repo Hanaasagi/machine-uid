@@ -1,0 +1,16 @@
+language: rust
+os:
+  - linux
+  - osx
+rust:
+  - stable
+  - beta
+  - nightly
+before_script:
+  - rustup component add clippy-preview
+script:
+  - cargo clippy --all-targets --all-features -- -D warnings
+  - cargo test
+matrix:
+  allow_failures:
+  - rust: nightly
