@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::error::Error;
 
+#[allow(dead_code)]
 fn read_file(file_path: &str) -> Result<String, Box<Error>> {
     let mut fd = File::open(file_path)?;
     let mut content = String::new();
@@ -65,10 +66,10 @@ mod machine_id {
     }
 
     fn extract_id(content: &str) -> Result<String, Box<Error>> {
-       let lines = content.split("\n");
+       let lines = content.split('\n');
        for line in lines {
            if line.contains("IOPlatformUUID") {
-               let k: Vec<&str> = line.rsplitn(2, "=").collect();
+               let k: Vec<&str> = line.rsplitn(2, '=').collect();
                let id = k[0].trim_matches(|c: char| c == '"' || c.is_whitespace());
                return Ok(id.to_string());
            }
