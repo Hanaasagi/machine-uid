@@ -32,11 +32,14 @@ pub mod machine_id {
 #[cfg(any(target_os="freebsd", target_os="dragonfly", target_os="openbsd", target_os="netbsd"))]
 pub mod machine_id {
     use ::read_file;
+    use std::process::Command;
+    use std::error::Error;
+
     const HOST_ID_PATH: &str = "/etc/hostid";
 
     pub fn get_machine_id() -> Result<String, Box<Error>> {
         match read_file(HOST_ID_PATH) {
-            Ok(machine_id) => return Ok(machine_id),
+            Ok(machine_id) => Ok(machine_id),
             Err(_) => Ok(read_from_kenv()?)
         }
     }
