@@ -26,8 +26,6 @@ pub mod machine_id {
         }
 
     }
-
-
 }
 
 #[cfg(any(target_os="freebsd", target_os="dragonfly", target_os="openbsd", target_os="netbsd"))]
