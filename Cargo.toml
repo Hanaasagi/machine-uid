@@ -1,5 +1,5 @@
 [package]
-name = "machine-id"
+name = "machine_id"
 version = "0.1.0"
 authors = ["Hanaasagi <ambiguous404@gmail.com>"]
 
