@@ -2,5 +2,10 @@
 name = "machine_id"
 version = "0.1.0"
 authors = ["Hanaasagi <ambiguous404@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/Hanaasagi/machine-id"
+description = """
+Get os native machine id without root permission.
+"""
 
 [dependencies]
