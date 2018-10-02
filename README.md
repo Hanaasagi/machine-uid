@@ -1,6 +1,6 @@
-# machine_id
+# machine-uid
 
-Get os native machine id without root permission. 
+Get os native machine id without root permission.
 
 [![Build Status](https://travis-ci.org/Hanaasagi/machine-id.svg?branch=master)](https://travis-ci.org/Hanaasagi/machine-id)
 
@@ -10,11 +10,11 @@ In Linux, machine id is a single newline-terminated, hexadecimal, 32-character, 
 ### Usage
 
 ```Rust
-extern crate machine_id;
+extern crate machine_uid;
 
 fn main() {
-    let machind_id: String = machine_id::get().unwrap();
-    println!("{}", machind_id);
+    let id: String = machine_uid::get().unwrap();
+    println!("{}", id);
 }
 
 ```

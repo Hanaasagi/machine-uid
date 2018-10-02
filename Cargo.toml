@@ -1,9 +1,9 @@
 [package]
-name = "machine_id"
+name = "machine-uid"
 version = "0.1.0"
 authors = ["Hanaasagi <ambiguous404@gmail.com>"]
 license = "MIT"
-repository = "https://github.com/Hanaasagi/machine-id"
+repository = "https://github.com/Hanaasagi/machine-uid"
 description = """
 Get os native machine id without root permission.
 """

@@ -1,10 +1,10 @@
-extern crate machine_id;
+extern crate machine_uid;
 
 #[test]
 fn test_get() {
-	let id = machine_id::get().unwrap();
+	let id = machine_uid::get().unwrap();
 	for _ in 1..100 {
-		let id2 = machine_id::get().unwrap();
+		let id2 = machine_uid::get().unwrap();
 		assert_eq!(id, id2);
 	}
 }

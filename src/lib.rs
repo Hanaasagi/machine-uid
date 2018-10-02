@@ -14,11 +14,11 @@
 //! ## Usage
 //!
 //! ```Rust
-//! extern crate machine_id;
+//! extern crate machine_uid;
 //!
 //! fn main() {
-//!     let machind_id: String = machine_id::get().unwrap();
-//!     println!("{}", machind_id);
+//!     let id: String = machine_uid::get().unwrap();
+//!     println!("{}", id);
 //! }
 //! ```
 //!
