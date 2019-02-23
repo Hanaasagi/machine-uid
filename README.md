@@ -6,7 +6,7 @@ Get os native machine id without root permission.
 [![machine-uid on crates.io][cratesio-image]][cratesio]
 [![machine-uid on docs.rs][docsrs-image]][docsrs]
 
-[travis-image]: https://travis-ci.org/Hanaasagi/machine-id.svg?branch=master
+[travis-image]: https://travis-ci.org/Hanaasagi/machine-uid.svg?branch=master
 [travis]: https://travis-ci.org/Hanaasagi/machine-id
 [cratesio-image]: https://img.shields.io/crates/v/machine-uid.svg
 [cratesio]: https://crates.io/crates/machine-uid
