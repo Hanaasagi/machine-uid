@@ -44,6 +44,12 @@
 //! ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID
 //! ```
 //!
+//! Windows:
+//!
+//! ```powershell
+//! (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography).MachineGuid
+//! ```
+//!
 //! ## Supported Platform
 //!
 //! I have tested in following platform:
@@ -52,25 +58,24 @@
 //! - OS X 10.6
 //! - FeeBSD 10.4
 //! - Fedora 28
+//! - Windows 10
 //!
-//! *current not support windows.*
 
-
+use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
-use std::error::Error;
 
 #[allow(dead_code)]
-fn read_file(file_path: &str) -> Result<String, Box<Error>> {
+fn read_file(file_path: &str) -> Result<String, Box<dyn Error>> {
     let mut fd = File::open(file_path)?;
     let mut content = String::new();
     fd.read_to_string(&mut content)?;
     Ok(content.trim().to_string())
 }
 
-#[cfg(target_os="linux")]
+#[cfg(target_os = "linux")]
 pub mod machine_id {
-    use ::read_file;
+    use read_file;
     use std::error::Error;
 
     // dbusPath is the default path for dbus machine id.
@@ -78,68 +83,88 @@ pub mod machine_id {
     // or when not found (e.g. Fedora 20)
     const DBUS_PATH_ETC: &str = "/etc/machine-id";
 
-
     /// Return machine id
-    pub fn get_machine_id() -> Result<String, Box<Error>> {
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
         match read_file(DBUS_PATH) {
             Ok(machine_id) => Ok(machine_id),
-            Err(_) => Ok(read_file(DBUS_PATH_ETC)?)
+            Err(_) => Ok(read_file(DBUS_PATH_ETC)?),
         }
-
     }
 }
 
-#[cfg(any(target_os="freebsd", target_os="dragonfly", target_os="openbsd", target_os="netbsd"))]
+#[cfg(any(
+    target_os = "freebsd",
+    target_os = "dragonfly",
+    target_os = "openbsd",
+    target_os = "netbsd"
+))]
 pub mod machine_id {
-    use ::read_file;
-    use std::process::Command;
+    use read_file;
     use std::error::Error;
+    use std::process::Command;
 
     const HOST_ID_PATH: &str = "/etc/hostid";
 
     /// Return machine id
-    pub fn get_machine_id() -> Result<String, Box<Error>> {
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
         match read_file(HOST_ID_PATH) {
             Ok(machine_id) => Ok(machine_id),
-            Err(_) => Ok(read_from_kenv()?)
+            Err(_) => Ok(read_from_kenv()?),
         }
     }
 
-    fn read_from_kenv() -> Result<String, Box<Error>> {
+    fn read_from_kenv() -> Result<String, Box<dyn Error>> {
         let output = Command::new("kenv")
             .args(&["-q", "smbios.system.uuid"])
             .output()?;
         let content = String::from_utf8_lossy(&output.stdout);
         Ok(content.trim().to_string())
     }
-
 }
 
-#[cfg(target_os="macos")]
+#[cfg(target_os = "macos")]
 mod machine_id {
     // machineID returns the uuid returned by `ioreg -rd1 -c IOPlatformExpertDevice`.
-    use std::process::Command;
     use std::error::Error;
+    use std::process::Command;
 
     /// Return machine id
-    pub fn get_machine_id() -> Result<String, Box<Error>> {
-       let output = Command::new("ioreg")
-           .args(&["-rd1", "-c", "IOPlatformExpertDevice"])
-           .output()?;
-       let content = String::from_utf8_lossy(&output.stdout);
-       extract_id(&content)
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
+        let output = Command::new("ioreg")
+            .args(&["-rd1", "-c", "IOPlatformExpertDevice"])
+            .output()?;
+        let content = String::from_utf8_lossy(&output.stdout);
+        extract_id(&content)
     }
 
-    fn extract_id(content: &str) -> Result<String, Box<Error>> {
-       let lines = content.split('\n');
-       for line in lines {
-           if line.contains("IOPlatformUUID") {
-               let k: Vec<&str> = line.rsplitn(2, '=').collect();
-               let id = k[0].trim_matches(|c: char| c == '"' || c.is_whitespace());
-               return Ok(id.to_string());
-           }
-       }
-       Err(From::from("No matching IOPlatformUUID in `ioreg -rd1 -c IOPlatformExpertDevice` command."))
+    fn extract_id(content: &str) -> Result<String, Box<dyn Error>> {
+        let lines = content.split('\n');
+        for line in lines {
+            if line.contains("IOPlatformUUID") {
+                let k: Vec<&str> = line.rsplitn(2, '=').collect();
+                let id = k[0].trim_matches(|c: char| c == '"' || c.is_whitespace());
+                return Ok(id.to_string());
+            }
+        }
+        Err(From::from(
+            "No matching IOPlatformUUID in `ioreg -rd1 -c IOPlatformExpertDevice` command.",
+        ))
+    }
+}
+
+#[cfg(target_os = "windows")]
+pub mod machine_id {
+    use std::error::Error;
+    use winreg::enums::HKEY_LOCAL_MACHINE;
+    use winreg::RegKey;
+
+    /// Return machine id
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
+        let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+        let crypto = hklm.open_subkey("SOFTWARE\\Microsoft\\Cryptography")?;
+        let id: String = crypto.get_value("MachineGuid")?;
+
+        Ok(id.trim().to_string())
     }
 }
 

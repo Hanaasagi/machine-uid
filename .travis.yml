@@ -2,6 +2,7 @@ language: rust
 os:
   - linux
   - osx
+  - windows
 rust:
   - stable
   - beta
@@ -13,4 +14,4 @@ script:
   - cargo test
 matrix:
   allow_failures:
-  - rust: nightly
+    - rust: nightly
