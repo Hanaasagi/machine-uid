@@ -75,7 +75,7 @@ fn read_file(file_path: &str) -> Result<String, Box<dyn Error>> {
 
 #[cfg(target_os = "linux")]
 pub mod machine_id {
-    use read_file;
+    use super::read_file;
     use std::error::Error;
 
     // dbusPath is the default path for dbus machine id.
@@ -99,7 +99,7 @@ pub mod machine_id {
     target_os = "netbsd"
 ))]
 pub mod machine_id {
-    use read_file;
+    use super::read_file;
     use std::error::Error;
     use std::process::Command;
 
