@@ -50,6 +50,12 @@ OSX:
 ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID
 ```
 
+Windows:
+
+```powershell
+(Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography).MachineGuid
+```
+
 ### Supported Platform
 
 I have tested in following platform:
@@ -58,8 +64,7 @@ I have tested in following platform:
 - OS X 10.6
 - FeeBSD 10.4
 - Fedora 28
-
-*current not support windows.*
+- Windows 10
 
 ### License
 [MIT License](https://github.com/Hanaasagi/machine-id/blob/master/LICENSE) Copyright (c) 2018, Hanaasagi
