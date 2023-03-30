@@ -4,11 +4,13 @@ Get os native machine id without root permission.
 
 [![machine-uid on GitHub Action][action-image]][action]
 [![machine-uid on crates.io][cratesio-image]][cratesio]
+[![total downloads][downloads-image]][cratesio]
 [![machine-uid on docs.rs][docsrs-image]][docsrs]
 
 [action-image]: https://github.com/Hanaasagi/machine-uid/actions/workflows/rust.yml/badge.svg
 [action]: https://github.com/Hanaasagi/machine-uid/actions/workflows/rust.yml
 [cratesio-image]: https://img.shields.io/crates/v/machine-uid.svg
+[downloads-image]: https://img.shields.io/crates/d/machine-uid
 [cratesio]: https://crates.io/crates/machine-uid
 [docsrs-image]: https://docs.rs/machine-uid/badge.svg
 [docsrs]: https://docs.rs/machine-uid
