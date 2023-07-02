@@ -167,7 +167,7 @@ pub mod machine_id {
     pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
         let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-        let flag = if unsafe { MachineUidIsWow64() == 1 } {
+        let flag = if unsafe { MachineUidIsWow64() == 1 } && cfg!(target_pointer_width = "32") {
             KEY_READ | KEY_WOW64_64KEY
         } else {
             KEY_READ
