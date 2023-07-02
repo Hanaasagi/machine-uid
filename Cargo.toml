@@ -13,3 +13,7 @@ Get os native machine id without root permission.
 
 [target.'cfg(windows)'.dependencies]
 winreg = "0.11"
+
+[build-dependencies]
+cc = "1.0"
+bindgen = "0.59"
