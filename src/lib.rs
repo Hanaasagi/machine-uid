@@ -155,13 +155,25 @@ mod machine_id {
 #[cfg(target_os = "windows")]
 pub mod machine_id {
     use std::error::Error;
-    use winreg::enums::HKEY_LOCAL_MACHINE;
+    use std::ffi::c_int;
+    use winreg::enums::{HKEY_LOCAL_MACHINE, KEY_READ, KEY_WOW64_64KEY};
     use winreg::RegKey;
+
+    extern "C" {
+        fn MachineUidIsWow64() -> c_int;
+    }
 
     /// Return machine id
     pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
         let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
-        let crypto = hklm.open_subkey("SOFTWARE\\Microsoft\\Cryptography")?;
+
+        let flag = if unsafe { MachineUidIsWow64() == 1 } && cfg!(target_pointer_width = "32") {
+            KEY_READ | KEY_WOW64_64KEY
+        } else {
+            KEY_READ
+        };
+
+        let crypto = hklm.open_subkey_with_flags("SOFTWARE\\Microsoft\\Cryptography", flag)?;
         let id: String = crypto.get_value("MachineGuid")?;
 
         Ok(id.trim().to_string())
