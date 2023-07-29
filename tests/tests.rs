@@ -1,5 +1,3 @@
-use machine_uid;
-
 #[test]
 fn test_get() {
     let id = machine_uid::get().unwrap();
