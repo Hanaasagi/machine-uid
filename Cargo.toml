@@ -17,4 +17,4 @@ winreg = "0.11"
 # [target.'cfg(windows)'.build-dependencies]
 [build-dependencies]
 cc = "1.0"
-bindgen = "0.59"
+bindgen = "0.66"
