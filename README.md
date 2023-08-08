@@ -75,6 +75,11 @@ I have tested in following platform:
 
 ### Changelog
 
+#### v0.5.1
+
+- Upgrade winreg to 0.50 [#9](https://github.com/Hanaasagi/machine-uid/pull/9)
+- Upgrade bindgen to 0.66 [#8](https://github.com/Hanaasagi/machine-uid/pull/8)
+
 #### v0.5.0
 
 - Fix cross-compilation issue [#7](https://github.com/Hanaasagi/machine-uid/pull/7)
