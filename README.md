@@ -63,15 +63,22 @@ Windows:
 (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography).MachineGuid
 ```
 
+illumos:
+
+```Bash
+gethostid(3C)
+```
+
 ### Supported Platform
 
 I have tested in following platform:
 
 - Debian 8
 - OS X 10.6
-- FeeBSD 10.4
+- FreeBSD 10.4
 - Fedora 28
 - Windows 10
+- OmniOS r151050
 
 ### Changelog
 
