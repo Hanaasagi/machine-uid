@@ -50,15 +50,22 @@
 //! (Get-ItemProperty -Path Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography).MachineGuid
 //! ```
 //!
+//! illumos:
+//!
+//! ```Bash
+//! gethostid(3C)
+//! ```
+//!
 //! ## Supported Platform
 //!
 //! I have tested in following platform:
 //!
 //! - Debian 8
 //! - OS X 10.6
-//! - FeeBSD 10.4
+//! - FreeBSD 10.4
 //! - Fedora 28
 //! - Windows 10
+//! - OmniOS r151050
 //!
 
 use std::error::Error;
@@ -177,6 +184,16 @@ pub mod machine_id {
         let id: String = crypto.get_value("MachineGuid")?;
 
         Ok(id.trim().to_string())
+    }
+}
+
+#[cfg(target_os = "illumos")]
+pub mod machine_id {
+    use std::error::Error;
+
+    /// Return machine id
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
+        Ok(format!("{:x}", unsafe { libc::gethostid() }))
     }
 }
 
