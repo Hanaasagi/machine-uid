@@ -82,6 +82,12 @@ I have tested in following platform:
 
 ### Changelog
 
+#### v0.5.2
+
+- Add illumos support [#11](https://github.com/Hanaasagi/machine-uid/pull/11)
+- Upgrade winreg to 0.52 [#12](https://github.com/Hanaasagi/machine-uid/pull/12)
+- Upgrade bindgen to 0.69 [#12](https://github.com/Hanaasagi/machine-uid/pull/12)
+
 #### v0.5.1
 
 - Upgrade winreg to 0.50 [#9](https://github.com/Hanaasagi/machine-uid/pull/9)
