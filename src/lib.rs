@@ -162,19 +162,46 @@ mod machine_id {
 #[cfg(target_os = "windows")]
 pub mod machine_id {
     use std::error::Error;
-    use std::ffi::c_int;
+    use std::ffi::c_void;
     use winreg::enums::{HKEY_LOCAL_MACHINE, KEY_READ, KEY_WOW64_64KEY};
     use winreg::RegKey;
 
-    extern "C" {
-        fn MachineUidIsWow64() -> c_int;
+    type BOOL = i32;
+    type HANDLE = *mut c_void;
+    type PBOOL = *mut BOOL;
+
+    extern "system" {
+        fn GetModuleHandleA(lpModuleName: *const u8) -> HANDLE;
+        fn GetProcAddress(hModule: HANDLE, lpProcName: *const u8) -> *const c_void;
+        fn GetCurrentProcess() -> HANDLE;
+    }
+
+    const KERNEL32: *const u8 = b"kernel32.dll\0".as_ptr();
+    const ISWOW64PROCESS: *const u8 = b"IsWow64Process\0".as_ptr();
+
+    type LpfnIswow64process = unsafe extern "system" fn(HANDLE, PBOOL) -> BOOL;
+
+    fn machine_uid_is_wow64() -> bool {
+        unsafe {
+            let mut b_is_wow64: BOOL = 0;
+            let h_module = GetModuleHandleA(KERNEL32);
+            let fn_is_wow64_process: Option<LpfnIswow64process> =
+                std::mem::transmute(GetProcAddress(h_module, ISWOW64PROCESS));
+
+            if let Some(fn_is_wow64_process) = fn_is_wow64_process {
+                if fn_is_wow64_process(GetCurrentProcess(), &mut b_is_wow64) == 0 {
+                    // Handle error if needed
+                }
+            }
+            b_is_wow64 == 1
+        }
     }
 
     /// Return machine id
     pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
         let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-        let flag = if unsafe { MachineUidIsWow64() == 1 } && cfg!(target_pointer_width = "32") {
+        let flag = if machine_uid_is_wow64() && cfg!(target_pointer_width = "32") {
             KEY_READ | KEY_WOW64_64KEY
         } else {
             KEY_READ
