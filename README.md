@@ -82,6 +82,10 @@ I have tested in following platform:
 
 ### Changelog
 
+#### v0.5.3
+
+- Remove built in C dependency [#13](https://github.com/Hanaasagi/machine-uid/pull/13)
+
 #### v0.5.2
 
 - Add illumos support [#11](https://github.com/Hanaasagi/machine-uid/pull/11)
