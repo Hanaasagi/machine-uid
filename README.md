@@ -82,6 +82,10 @@ I have tested in following platform:
 
 ### Changelog
 
+#### v0.5.4
+
+- refactor: use windows-registry and simplify machine_uid_is_wow64 [#15](https://github.com/Hanaasagi/machine-uid/pull/15)
+
 #### v0.5.3
 
 - Remove built in C dependency [#13](https://github.com/Hanaasagi/machine-uid/pull/13)
