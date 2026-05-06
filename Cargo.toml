@@ -20,3 +20,6 @@ windows-registry = "0.6.1"
 
 [target.'cfg(target_os = "illumos")'.dependencies]
 libc = "0.2.177"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+libc = "0.2.177"
