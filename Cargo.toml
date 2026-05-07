@@ -1,6 +1,6 @@
 [package]
 name = "machine-uid"
-version = "0.5.4"
+version = "0.6.0"
 authors = ["Hanaasagi <ambiguous404@gmail.com>"]
 edition = "2021"
 license = "MIT"
