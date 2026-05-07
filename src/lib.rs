@@ -141,6 +141,8 @@ mod machine_id {
     // syscall.
     use std::error::Error;
     use std::io;
+    #[cfg(test)]
+    use std::process::Command;
 
     /// Return machine id
     pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
@@ -175,6 +177,39 @@ mod machine_id {
             uuid[14],
             uuid[15],
         ))
+    }
+
+    /// Return machine id using the legacy `ioreg`-based implementation.
+    #[cfg(test)]
+    fn get_machine_id_legacy() -> Result<String, Box<dyn Error>> {
+        let output = Command::new("ioreg")
+            .args(["-rd1", "-c", "IOPlatformExpertDevice"])
+            .output()?;
+        let content = String::from_utf8_lossy(&output.stdout);
+        extract_id(&content)
+    }
+
+    #[cfg(test)]
+    fn extract_id(content: &str) -> Result<String, Box<dyn Error>> {
+        let lines = content.split('\n');
+        for line in lines {
+            if line.contains("IOPlatformUUID") {
+                let k: Vec<&str> = line.rsplitn(2, '=').collect();
+                let id = k[0].trim_matches(|c: char| c == '"' || c.is_whitespace());
+                return Ok(id.to_string());
+            }
+        }
+        Err(From::from(
+            "No matching IOPlatformUUID in `ioreg -rd1 -c IOPlatformExpertDevice` command.",
+        ))
+    }
+
+    #[test]
+    fn test_macos_get_matches_legacy_ioreg() {
+        let id = get_machine_id().unwrap();
+        let legacy_id = get_machine_id_legacy().unwrap();
+
+        assert_eq!(id, legacy_id);
     }
 }
 
