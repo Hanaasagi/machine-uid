@@ -53,8 +53,8 @@ cat /etc/hostid # or kenv -q smbios.system.uuid
 
 OSX:
 
-```Bash
-ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID
+```C
+gethostuuid(3) // same value as `ioreg -rd1 -c IOPlatformExpertDevice`
 ```
 
 Windows:
@@ -81,6 +81,10 @@ I have tested in following platform:
 - OmniOS r151050
 
 ### Changelog
+
+#### v0.6.0
+
+- perf(macos): use `gethostuuid(3)` instead of `ioreg` command output [#17](https://github.com/Hanaasagi/machine-uid/pull/17)
 
 #### v0.5.4
 
