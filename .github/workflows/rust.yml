@@ -46,6 +46,19 @@ jobs:
       - name: Run tests
         run: cargo test --verbose
 
+  android-check:
+    name: Check Android target
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          target: aarch64-linux-android
+      - name: Check android target
+        run: cargo check --target aarch64-linux-android
+
   clippy:
     name: Run Clippy
     runs-on: ubuntu-latest

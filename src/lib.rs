@@ -261,4 +261,17 @@ pub mod machine_id {
     }
 }
 
+#[cfg(target_os = "android")]
+pub mod machine_id {
+    use super::read_file;
+    use std::error::Error;
+
+    /// Android has no persistent machine-id; the boot id from
+    /// /proc/sys/kernel/random/boot_id is the closest stable identifier
+    /// readable without root. It changes on reboot.
+    pub fn get_machine_id() -> Result<String, Box<dyn Error>> {
+        read_file("/proc/sys/kernel/random/boot_id")
+    }
+}
+
 pub use machine_id::get_machine_id as get;
